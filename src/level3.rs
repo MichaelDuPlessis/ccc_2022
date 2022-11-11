@@ -64,7 +64,7 @@ impl Game {
                     break 'outer;
                 }
     
-                self.board[g.pos.1 as usize][g.pos.0 as usize] = ' ';
+                // self.board[g.pos.1 as usize][g.pos.0 as usize] = ' ';
                 g.pos = new_pos;
             }
 
