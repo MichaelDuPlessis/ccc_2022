@@ -1,8 +1,12 @@
-use petgraph::{graph::NodeIndex, prelude::UnGraph};
+use core::panic;
+use std::fmt::Debug;
+use petgraph::algo;
+use petgraph::graph::NodeIndex;
+use petgraph::{prelude::UnGraph, graph};
 
 const LEVEL: &str = "level4";
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Coord(usize, usize);
 
 impl std::ops::Sub for Coord {
@@ -29,7 +33,7 @@ pub enum Kind {
     Space,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Entity {
     kind: Kind,
     pos: Coord,
@@ -85,7 +89,7 @@ impl Game {
 
         // adding edges
         for i in 0..size {
-            for j in 0..size {
+            for j in 0.. size {
                 if i != size - 1 {
                     if i + 1 != j {
                         if graph[NodeIndex::new(i + 1 + j * size)].kind != Kind::Wall
@@ -131,5 +135,28 @@ impl Game {
             max_moves,
             pac_pos,
         }
+    }
+
+    pub fn calculate(&self) {
+        let mut graph = self.graph.clone();
+
+        let ways = algo::all_simple_paths::<Vec<_>, _>(&graph, a, d, 0, None).collect::<Vec<_>>();
+
+        for way in &ways {
+            println!("{:?}", way.clone());
+        }  
+
+        let nodes = graph.node_weights();
+
+     
+
+        for weight in nodes {
+
+        }
+
+        println!("end");
+
+        println!("{:?}", self.graph);
+        
     }
 }
