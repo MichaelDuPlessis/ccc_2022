@@ -1,3 +1,5 @@
+use core::panicking::panic;
+
 const LEVEL: &str = "level3";
 
 #[derive(Clone, Copy, Debug)]
@@ -71,13 +73,24 @@ impl Game {
                 g.pos = new_pos;
             }
 
-            if self.board[new_pos.1 as usize][new_pos.0 as usize] == 'C' {
-                count += 1;
-                self.board[new_pos.1 as usize][new_pos.0 as usize] = ' ';
+            match self.board[new_pos.1 as usize][new_pos.0 as usize] {
+                'G' => {
+                    dead = true;
+                    break 'outer;
+                }
+                'W' => {
+                    dead = true;
+                    break 'outer;
+                }
+                'C' => {
+                    count += 1;
+                    self.board[new_pos.1 as usize][new_pos.0 as usize] = ' ';
+                }
+                _ => panic!("how")
             }
         }
 
-        std::fs::write(format!("./{}/{}.out", LEVEL, self.file), format!("{} {}", count.to_string(), if dead { "YES" } else { "NO" })).unwrap();
+        std::fs::write(format!("./{}/{}.out", LEVEL, self.file), format!("{} {}", count.to_string(), if dead { "NO" } else { "YES" })).unwrap();
     }
 
     pub fn new(file: &str) -> Self {
@@ -151,10 +164,6 @@ impl Game {
                         },
                         _ => {}
                     }
-                    
-                    
-        
-                    
 
                     count += 1;
                 } 
