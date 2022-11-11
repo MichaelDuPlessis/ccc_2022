@@ -106,11 +106,35 @@ impl Game {
                 coords.1 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
                 coords.0 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
             }
-            else {
+            else if index <= num + 2{
                 _movements = line.trim().to_string();
             }
-
+            else {
+                break;
+            }
         } 
+
+        let mut num_ghosts: usize = lines.next().unwrap().to_string().parse().unwrap();
+
+        let mut ghosts = Vec::new();
+
+        for line in lines {
+            let mut g_coords = Coords(0, 0);
+
+            let mut indices = line.split_whitespace();
+
+            g_coords.1 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
+            g_coords.0 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
+
+            let _movements = lines.next().unwrap().trim().to_string();
+
+            let ghost = Ghost {
+                pos: g_coords,
+                movements: _movements,
+            };
+
+            ghosts.push(ghost);
+        }
 
         Self {
             size: num,
@@ -118,6 +142,7 @@ impl Game {
             board: array,
             movements: _movements,
             pacman: coords,
+            ghosts,
         }
     }
 }

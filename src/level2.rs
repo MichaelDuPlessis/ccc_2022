@@ -17,6 +17,7 @@ impl std::ops::Add for Coords {
     }
 }
 
+#[derive(Debug)]
 pub struct Game {
     file: String,
     size: usize,
