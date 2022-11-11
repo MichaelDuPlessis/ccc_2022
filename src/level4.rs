@@ -97,7 +97,6 @@ impl Game {
         for way in &ways {
             println!("{:?}", way.clone());
         }  
-        
 
         let nodes = graph.node_weights();
 
