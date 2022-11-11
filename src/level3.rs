@@ -1,3 +1,5 @@
+const LEVEL: &str = "level3";
+
 #[derive(Clone, Copy, Debug)]
 pub struct Coords(isize, isize);
 
@@ -17,7 +19,6 @@ impl std::ops::Add for Coords {
     }
 }
 
-#[derive(Debug)]
 pub struct Game {
     file: String,
     size: usize,
@@ -49,11 +50,11 @@ impl Game {
             self.pacman = new_pos;
         }
 
-        std::fs::write(format!("./level2/{}.out", self.file), count.to_string()).unwrap();
+        std::fs::write(format!("./{}/{}.out", LEVEL, self.file), count.to_string()).unwrap();
     }
 
     pub fn new(file: &str) -> Self {
-        let input = std::fs::read_to_string(format!("./level2/{}.in", file)).unwrap();
+        let input = std::fs::read_to_string(format!("./{}/{}.in", LEVEL, file)).unwrap();
 
         let mut lines = input.lines();
         
@@ -81,11 +82,17 @@ impl Game {
                 coords.1 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
                 coords.0 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
             }
-            else {
+            else if index == num + 1{
                 _movements = line.trim().to_string();
             }
-
+            else {
+                break;
+            }
         } 
+
+        for line in lines {
+            
+        }
 
         Self {
             size: num,
