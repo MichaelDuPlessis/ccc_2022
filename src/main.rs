@@ -15,6 +15,4 @@ fn main() {
     entity.calculate();
     //     level4::Game::new(&format!("level4_{}", i)).move_pac();
     // }
-
-    println!("{:?}", level4::Game::new(&format!("level4_{}", "example")));
 }

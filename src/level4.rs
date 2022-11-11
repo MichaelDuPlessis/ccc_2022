@@ -38,8 +38,8 @@ pub enum Kind {
 
 #[derive(Debug, Clone)]
 pub struct Entity {
-    kind: Kind,
-    pos: Coord,
+    pub kind: Kind,
+    pub pos: Coord,
 }
 
 impl Entity {
@@ -50,6 +50,7 @@ impl Entity {
 
 #[derive(Debug)]
 pub struct Game {
+    file: String,
     graph: UnGraph<Entity, ()>,
     max_moves: usize,
     size: usize,
@@ -133,6 +134,7 @@ impl Game {
         }
 
         Self {
+            file: file.to_string(),
             graph,
             size,
             max_moves,
@@ -142,40 +144,43 @@ impl Game {
 
     pub fn calculate(&self) {
         let mut graph = self.graph.clone();
+        
+        let start = graph[NodeIndex::new(self.pac_pos.0 + self.pac_pos.1*self.size)];
 
-        let ways = algo::all_simple_paths::<Vec<_>, _>(&graph, a, d, 0, None).collect::<Vec<_>>();
+        let path_to_all = algo::all_simple_paths::<Vec<_>, _>(&graph, start, start, 0, None)
+        .collect::<Vec<_>>();
 
-        for way in &ways {
-            println!("{:?}", way.clone());
-        }  
+        let mut final_path = *path_to_all.get(0).unwrap();
 
-        let nodes = graph.node_weights();     
 
-        let working_nodes = self.graph.node_weights();
-
-        let coin_indices = Vec::new();
-
-        for (index, weight) in nodes.enumerate() {
-            if *weight == Entity::Coin {
-                coin_indices.push(index);
-            } 
-        }
-
-        let start_pos = (0, 0);
-
-        let start_node = graph.node_indices().last().unwrap();
-
-        let mut all_paths = Vec::new();
-
-        let mut coins_left = 0;
-
-        for (index, node) in working_nodes.enumerate() {
-            coins_left = 0;
-            if *node == Entity::Coin {
-                all_paths.push(algo::all_simple_paths::<Vec<_>, _>(&graph, start_node, index as NodeIndex, 0, None).collect::<Vec<_>>());
-                coins_left += 1;
+        for path in path_to_all {
+            if path.len() > final_path.len() {
+                final_path = path;
             }
         }
+
+        let mut coords = Vec::new();
+
+        for node_index in final_path {
+            coords.push(graph[node_index].pos);
+        }
+
+        let out_string = String::new();
+
+        for index in 0..coords.len()-1 {
+            let diff = coords[index] - coords[index + 1];
+
+            match diff {
+                (-1, 0) => out_string.push('R'),
+                (1, 0) => out_string.push('L'),
+                (0, -1) => out_string.push('D'),
+                (0, 1) => out_string.push('U'),
+                _ => ()
+            }
+        }
+
+        std::fs::write(format!("./{}/{}.out", LEVEL, self.file), out_string).unwrap();
+        
 
         println!("end");
 
