@@ -16,5 +16,5 @@ fn main() {
     //     level4::Game::new(&format!("level4_{}", i)).move_pac();
     // }
 
-    level4::Game::new(&format!("level4_{}", "example"));
+    println!("{:?}", level4::Game::new(&format!("level4_{}", "example")));
 }
