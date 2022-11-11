@@ -62,12 +62,11 @@ impl Game {
                     _ => Coords(0, 0)
                 };
     
-                if self.board[new_pos.1 as usize][new_pos.0 as usize] == 'P' {
+                if new_pos == self.pacman {
                     dead = true;
                     break 'outer;
                 }
     
-                // self.board[g.pos.1 as usize][g.pos.0 as usize] = ' ';
                 g.pos = new_pos;
             }
 
