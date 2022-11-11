@@ -19,6 +19,11 @@ impl std::ops::Add for Coords {
     }
 }
 
+pub struct Ghost {
+    pos: Coords,
+    movements: String,
+}
+
 pub struct Game {
     file: String,
     size: usize,

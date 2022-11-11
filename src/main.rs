@@ -1,5 +1,6 @@
 mod level1;
 mod level2;
+pub mod level3;
 
 fn main() {
     for i in 1..6 {
