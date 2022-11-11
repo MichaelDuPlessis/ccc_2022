@@ -19,11 +19,13 @@ impl std::ops::Add for Coords {
     }
 }
 
+#[derive(Debug)]
 pub struct Ghost {
     pos: Coords,
     movements: String,
 }
 
+#[derive(Debug)]
 pub struct Game {
     file: String,
     size: usize,
@@ -32,6 +34,7 @@ pub struct Game {
     pacman: Coords,
     ghosts: Vec<Ghost>,
 }
+
 
 impl Game {
     pub fn move_pac(&mut self) {
