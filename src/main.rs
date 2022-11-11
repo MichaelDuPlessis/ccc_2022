@@ -4,9 +4,9 @@ mod level3;
 mod level4;
 
 fn main() {
-    for i in 1..8 {
-        level3::Game::new(&format!("level4_{}", i)).move_pac();
-    }
+    // for i in 1..8 {
+    //     level4::Game::new(&format!("level4_{}", i)).move_pac();
+    // }
 
-    level3::Game::new(&format!("level4_{}", "example")).move_pac();
+    level4::Game::new(&format!("level4_{}", "example"));
 }
