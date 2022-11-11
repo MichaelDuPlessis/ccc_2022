@@ -20,7 +20,6 @@ impl std::ops::Add for Coords {
 }
 
 #[derive(Debug)]
-
 pub struct Ghost {
     pos: Coords,
     movements: String,
@@ -153,8 +152,6 @@ impl Game {
                 } 
             }
         }
-
-        println!("{:?}", ghosts);
 
         Self {
             size: num,
