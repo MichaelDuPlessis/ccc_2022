@@ -58,22 +58,22 @@ impl Game {
         for i in 0..size {
             for j in 0..size {
                 if i != size - 1 {
-                    if i != j {
+                    if i + 1 != j {
                         graph.update_edge(NodeIndex::new(i + 1), NodeIndex::new(j), ());
                     }
                 }
                 if i != 0 {
-                    if i != j {
+                    if i - 1 != j {
                         graph.update_edge(NodeIndex::new(i - 1), NodeIndex::new(j), ());
                     }
                 }
                 if j != size - 1 {
-                    if i != j {
+                    if i != j + 1 {
                         graph.update_edge(NodeIndex::new(i), NodeIndex::new(j + 1), ());
                     }
                 }
                 if j != 0 {
-                    if i != j {
+                    if i != j - 1 {
                         graph.update_edge(NodeIndex::new(i), NodeIndex::new(j - 1), ());
                     }
                 }
