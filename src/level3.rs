@@ -25,6 +25,7 @@ pub struct Ghost {
     movements: String,
 }
 
+#[derive(Debug)]
 pub struct Game {
     file: String,
     size: usize,
@@ -33,6 +34,7 @@ pub struct Game {
     pacman: Coords,
     ghosts: Vec<Ghost>,
 }
+
 
 impl Game {
     pub fn move_pac(&mut self) {
@@ -137,16 +139,22 @@ impl Game {
                             g_coords.0 = indices.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
                         },
                         1 => {},
-                        2 => ghost_movements = line.trim().to_string(),
+                        2 => {
+                            ghost_movements = line.trim().to_string();
+
+                            let ghost = Ghost {
+                                pos: g_coords,
+                                movements: ghost_movements.clone(),
+                            };
+
+                            ghosts.push(ghost);
+                        },
                         _ => {}
                     }
-
-                    let ghost = Ghost {
-                        pos: g_coords,
-                        movements: ghost_movements.clone(),
-                    };
+                    
+                    
         
-                    ghosts.push(ghost);
+                    
 
                     count += 1;
                 } 
