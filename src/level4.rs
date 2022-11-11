@@ -1,4 +1,4 @@
-use petgraph::{prelude::UnGraph, graph::NodeIndex};
+use petgraph::{graph::NodeIndex, prelude::UnGraph};
 
 const LEVEL: &str = "level4";
 
@@ -26,24 +26,24 @@ impl Game {
         let mut lines = input.lines();
         let size = lines.next().unwrap().parse::<usize>().unwrap();
 
-        let mut max_moves= 0;
+        let mut max_moves = 0;
 
         for (i, line) in lines.enumerate() {
             if i < size {
                 for (j, c) in line.chars().enumerate() {
-                     match c {
+                    match c {
                         'P' => {
                             graph.add_node(Entity::Pacman);
-                        },
+                        }
                         'C' => {
                             graph.add_node(Entity::Coin);
-                        },
+                        }
                         'G' => {
                             graph.add_node(Entity::Ghost);
-                        },
+                        }
                         'W' => {
                             graph.add_node(Entity::Wall);
-                        },
+                        }
                         _ => panic!("Why cruel world"),
                     };
                 }
@@ -56,18 +56,26 @@ impl Game {
 
         // adding edges
         for i in 0..size {
-            for j in 0.. size {
+            for j in 0..size {
                 if i != size - 1 {
-                    graph.update_edge(NodeIndex::new(i + 1), NodeIndex::new(j), ());
+                    if i != j {
+                        graph.update_edge(NodeIndex::new(i + 1), NodeIndex::new(j), ());
+                    }
                 }
                 if i != 0 {
-                    graph.update_edge(NodeIndex::new(i - 1), NodeIndex::new(j), ());
+                    if i != j {
+                        graph.update_edge(NodeIndex::new(i - 1), NodeIndex::new(j), ());
+                    }
                 }
                 if j != size - 1 {
-                    graph.update_edge(NodeIndex::new(i), NodeIndex::new(j + 1), ());
+                    if i != j {
+                        graph.update_edge(NodeIndex::new(i), NodeIndex::new(j + 1), ());
+                    }
                 }
                 if j != 0 {
-                    graph.update_edge(NodeIndex::new(i), NodeIndex::new(j - 1), ());
+                    if i != j {
+                        graph.update_edge(NodeIndex::new(i), NodeIndex::new(j - 1), ());
+                    }
                 }
             }
         }
