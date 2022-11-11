@@ -1,4 +1,4 @@
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Coords(isize, isize);
 
 impl std::ops::Sub for Coords {
@@ -31,16 +31,21 @@ impl Game {
 
         for m in self.movements.chars() {
             let new_pos: Coords = match m {
-                'D' => self.pacman + Coords(0, -1),
-                'U' => self.pacman + Coords(0, 1),
+                'U' => self.pacman + Coords(0, -1),
+                'D' => self.pacman + Coords(0, 1),
                 'L' => self.pacman + Coords(-1, 0),
-                'R' => self.pacman + Coords(0, 1),
+                'R' => self.pacman + Coords(1, 0),
                 _ => Coords(0, 0)
             };
 
-            if self.board[new_pos.0 as usize][new_pos.1 as usize] == 'C' {
+            println!("{:?}", new_pos);
+
+            if self.board[new_pos.1 as usize][new_pos.0 as usize] == 'C' {
                 count += 1;
+                self.board[new_pos.1 as usize][new_pos.0 as usize] = ' ';
             }
+
+            self.pacman = new_pos;
         }
 
         std::fs::write(format!("./level2/{}.out", self.file), count.to_string()).unwrap();
@@ -72,8 +77,8 @@ impl Game {
             else if index == num {
                 let mut indeces = line.split_whitespace();
 
-                coords.0 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
                 coords.1 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
+                coords.0 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
             }
             else {
                 _movements = line.trim().to_string();
