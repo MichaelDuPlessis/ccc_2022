@@ -1,6 +1,7 @@
 use core::panic;
 use std::fmt::Debug;
 
+use petgraph::data::Build;
 use petgraph::visit::GraphProp;
 use petgraph::{prelude::UnGraph, graph};
 
@@ -98,12 +99,33 @@ impl Game {
             println!("{:?}", way.clone());
         }  
 
-        let nodes = graph.node_weights();
+        let nodes = graph.node_weights();     
 
-     
+        let working_nodes = self.graph.node_weights();
 
-        for weight in nodes {
+        let coin_indices = Vec::new();
 
+        for (index, weight) in nodes.enumerate() {
+            if *weight == Entity::Coin {
+                coin_indices.push(index);
+            } 
+        }
+
+        let start_pos = (0, 0);
+
+        let start_node = graph.node_indices().last().unwrap();
+
+        let mut all_paths = Vec::new();
+
+        let mut coins_left = 0;
+
+        while 
+        for (index, node) in working_nodes.enumerate() {
+            coins_left = 0;
+            if *node == Entity::Coin {
+                all_paths.push(algo::all_simple_paths::<Vec<_>, _>(&graph, start_node, index as NodeIndex, 0, None).collect::<Vec<_>>());
+                coins_left += 1;
+            }
         }
 
         println!("end");
