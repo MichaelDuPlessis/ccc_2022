@@ -1,8 +1,25 @@
 use crate::level1::count_coins;
 
-type Coords = (usize, usize);
+#[derive(Clone, Copy)]
+pub struct Coords(usize, usize);
 
-struct Game {
+impl std::ops::Sub for Coords {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 - other.0, self.1 - other.1)
+    }
+}
+
+impl std::ops::Add for Coords {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 + other.0, self.1 + other.1)
+    }
+}
+
+pub struct Game {
     size: usize,
     board: Vec<Vec<char>>,
     movements: String,
