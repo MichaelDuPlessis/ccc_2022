@@ -53,7 +53,7 @@ impl Game {
             self.board[self.pacman.1 as usize][self.pacman.0 as usize] = ' ';
             self.pacman = new_pos;
 
-            for g in self.ghosts {
+            for g in self.ghosts.iter_mut() {
                 let new_pos: Coords = match g.movements.as_bytes()[i] as char {
                     'U' => g.pos + Coords(0, -1),
                     'D' => g.pos + Coords(0, 1),
@@ -139,23 +139,27 @@ impl Game {
                             g_coords.0 = indices.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
                         },
                         1 => {},
-                        2 => ghost_movements = line.trim().to_string(),
+                        2 => {
+                            ghost_movements = line.trim().to_string();
+
+                            let ghost = Ghost {
+                                pos: g_coords,
+                                movements: ghost_movements.clone(),
+                            };
+
+                            ghosts.push(ghost);
+                        },
                         _ => {}
                     }
                     
-                    let ghost = Ghost {
-                        pos: g_coords,
-                        movements: ghost_movements.clone(),
-                    };
+                    
         
-                    ghosts.push(ghost);
+                    
 
                     count += 1;
                 } 
             }
         } 
-
-        
 
         Self {
             size: num,
