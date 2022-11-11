@@ -11,3 +11,9 @@ pub enum Entity {
 struct Game {
 
 }
+
+impl Game {
+    pub fn new(path: &str) -> Self {
+        
+    }
+}
