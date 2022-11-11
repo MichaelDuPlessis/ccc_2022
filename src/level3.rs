@@ -1,8 +1,6 @@
-use core::panicking::panic;
-
 const LEVEL: &str = "level3";
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Coords(isize, isize);
 
 impl std::ops::Sub for Coords {
@@ -56,6 +54,11 @@ impl Game {
             self.pacman = new_pos;
 
             for g in self.ghosts.iter_mut() {
+                if g.pos == self.pacman {
+                    dead = true;
+                    break 'outer;
+                }
+
                 let new_pos: Coords = match g.movements.as_bytes()[i] as char {
                     'U' => g.pos + Coords(0, -1),
                     'D' => g.pos + Coords(0, 1),
@@ -74,10 +77,6 @@ impl Game {
             }
 
             match self.board[new_pos.1 as usize][new_pos.0 as usize] {
-                'G' => {
-                    dead = true;
-                    break 'outer;
-                }
                 'W' => {
                     dead = true;
                     break 'outer;
@@ -86,7 +85,7 @@ impl Game {
                     count += 1;
                     self.board[new_pos.1 as usize][new_pos.0 as usize] = ' ';
                 }
-                _ => panic!("how")
+                _ => (),
             }
         }
 
