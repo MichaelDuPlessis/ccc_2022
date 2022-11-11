@@ -1,5 +1,6 @@
 mod level1;
 mod level2;
+pub mod level3;
 
 fn main() {
     let game = Game::new("level2_1");
