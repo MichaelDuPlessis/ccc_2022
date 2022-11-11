@@ -54,11 +54,6 @@ impl Game {
             self.pacman = new_pos;
 
             for g in self.ghosts.iter_mut() {
-                if g.pos == self.pacman {
-                    dead = true;
-                    break 'outer;
-                }
-
                 let new_pos: Coords = match g.movements.as_bytes()[i] as char {
                     'U' => g.pos + Coords(0, -1),
                     'D' => g.pos + Coords(0, 1),
@@ -77,10 +72,10 @@ impl Game {
             }
 
             match self.board[new_pos.1 as usize][new_pos.0 as usize] {
-                'W' => {
-                    dead = true;
-                    break 'outer;
-                }
+                // 'W' => {
+                //     dead = true;
+                //     break 'outer;
+                // }
                 'C' => {
                     count += 1;
                     self.board[new_pos.1 as usize][new_pos.0 as usize] = ' ';
