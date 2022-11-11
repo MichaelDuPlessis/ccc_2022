@@ -1,6 +1,4 @@
-use core::panic;
-
-use petgraph::{prelude::UnGraph, graph};
+use petgraph::{prelude::UnGraph, graph::NodeIndex};
 
 const LEVEL: &str = "level4";
 
@@ -50,13 +48,20 @@ impl Game {
         }
 
         // adding edges
-        for i in 0..size*size {
-            if i != 0 {
-
-            }
-            
-            if i == size - 1 {
-                
+        for i in 0..size {
+            for j in 0.. size {
+                if i != size - 1 {
+                    graph.update_edge(NodeIndex::new(i + 1), NodeIndex::new(j), ());
+                }
+                if i != 0 {
+                    graph.update_edge(NodeIndex::new(i - 1), NodeIndex::new(j), ());
+                }
+                if j != size - 1 {
+                    graph.update_edge(NodeIndex::new(i), NodeIndex::new(j + 1), ());
+                }
+                if j != 0 {
+                    graph.update_edge(NodeIndex::new(i), NodeIndex::new(j - 1), ());
+                }
             }
         }
 
