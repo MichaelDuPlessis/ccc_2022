@@ -1,4 +1,4 @@
-const LEVEL: &str = "level3";
+const LEVEL: &str = "level4";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Coords(isize, isize);
