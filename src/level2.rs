@@ -19,6 +19,7 @@ impl std::ops::Add for Coords {
     }
 }
 
+#[derive(debug)]
 pub struct Game {
     size: usize,
     board: Vec<Vec<char>>,
