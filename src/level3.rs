@@ -20,10 +20,7 @@ impl std::ops::Add for Coords {
 }
 
 #[derive(Debug)]
-<<<<<<< HEAD
-=======
 
->>>>>>> 7c6566042567b881397790ec8ee0ca98db90de55
 pub struct Ghost {
     pos: Coords,
     movements: String,
@@ -155,16 +152,8 @@ impl Game {
                         },
                         _ => {}
                     }
-<<<<<<< HEAD
                     
                     
-=======
-
-                    let ghost = Ghost {
-                        pos: g_coords,
-                        movements: ghost_movements.clone(),
-                    };
->>>>>>> 7c6566042567b881397790ec8ee0ca98db90de55
         
                     
 
