@@ -60,7 +60,7 @@ impl Game {
         let mut _movements = String::new();
 
         for (index, line) in lines.enumerate() {
-            if index < 10 {
+            if index < num {
                 let mut new_row = Vec::new();
     
                 for character in line.chars() {
@@ -69,11 +69,11 @@ impl Game {
     
                 array.push(new_row);
             }
-            else if index == 10 {
+            else if index == num {
                 let mut indeces = line.split_whitespace();
 
-                coords.0 = indeces.next().unwrap().to_string().parse().unwrap();
-                coords.1 = indeces.next().unwrap().to_string().parse().unwrap();
+                coords.0 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
+                coords.1 = indeces.next().unwrap().to_string().parse::<isize>().unwrap() - 1isize;
             }
             else {
                 _movements = line.trim().to_string();
