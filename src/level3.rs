@@ -36,8 +36,9 @@ pub struct Game {
 impl Game {
     pub fn move_pac(&mut self) {
         let mut count = 0;
+        let mut dead = false;
 
-        for m in self.movements.chars() {
+        'outer: for (i, m) in self.movements.chars().enumerate() {
             let new_pos: Coords = match m {
                 'U' => self.pacman + Coords(0, -1),
                 'D' => self.pacman + Coords(0, 1),
@@ -46,17 +47,34 @@ impl Game {
                 _ => Coords(0, 0)
             };
 
-            println!("{:?}", new_pos);
+            self.board[self.pacman.1 as usize][self.pacman.0 as usize] = ' ';
+            self.pacman = new_pos;
+
+            for g in self.ghosts {
+                let new_pos: Coords = match m {
+                    'U' => g.pos + Coords(0, -1),
+                    'D' => g.pos + Coords(0, 1),
+                    'L' => g.pos + Coords(-1, 0),
+                    'R' => g.pos + Coords(1, 0),
+                    _ => Coords(0, 0)
+                };
+    
+                if self.board[new_pos.1 as usize][new_pos.0 as usize] == 'P' {
+                    dead = true;
+                    break 'outer;
+                }
+    
+                self.board[g.pos.1 as usize][g.pos.0 as usize] = ' ';
+                g.pos = new_pos;
+            }
 
             if self.board[new_pos.1 as usize][new_pos.0 as usize] == 'C' {
                 count += 1;
                 self.board[new_pos.1 as usize][new_pos.0 as usize] = ' ';
             }
-
-            self.pacman = new_pos;
         }
 
-        std::fs::write(format!("./{}/{}.out", LEVEL, self.file), count.to_string()).unwrap();
+        std::fs::write(format!("./{}/{}.out", LEVEL, self.file), format!("{} {}", count.to_string(), if dead { "YES" } else { "NO" })).unwrap();
     }
 
     pub fn new(file: &str) -> Self {
