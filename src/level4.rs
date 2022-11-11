@@ -1,3 +1,5 @@
+use core::panic;
+
 use petgraph::{prelude::UnGraph, graph};
 
 const LEVEL: &str = "level4";
@@ -23,9 +25,40 @@ impl Game {
         let mut lines = input.lines();
         let size = lines.next().unwrap().parse::<usize>().unwrap();
 
-        let mut input = lines.collect::<String>();
-        println!("{input}");
-        input.retain(|c| !c.is_whitespace());
+        for (i, line) in lines.enumerate() {
+            for (j, c) in line.chars().enumerate() {
+                 match c {
+                    'P' => {
+                        graph.add_node(Entity::Pacman);
+                    },
+                    'C' => {
+                        graph.add_node(Entity::Coin);
+                    },
+                    'G' => {
+                        graph.add_node(Entity::Ghost);
+                    },
+                    'W' => {
+                        graph.add_node(Entity::Wall);
+                    },
+                    _ => panic!("Why cruel world"),
+                };
+            }
+
+            if i == size - 1 {
+                break;
+            }
+        }
+
+        // adding edges
+        for i in 0..size*size {
+            if i != 0 {
+
+            }
+            
+            if i == size - 1 {
+                
+            }
+        }
 
         Self {
             graph
