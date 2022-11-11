@@ -7,6 +7,6 @@ fn main() {
     println!("{:?}", game);
 
     for i in 1..6 {
-        level1::count_coins(&format!("level1_{}", i));
+        level2::Game::new(&format!("level2_{}", i)).move_pac();
     }
 }
