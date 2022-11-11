@@ -12,5 +12,9 @@ fn main() {
 
     let entity = level4::Game::new(&format!("level4_{}", "example"));
 
-    level4::Game::calculate();
+    entity.calculate();
+    //     level4::Game::new(&format!("level4_{}", i)).move_pac();
+    // }
+
+    level4::Game::new(&format!("level4_{}", "example"));
 }
