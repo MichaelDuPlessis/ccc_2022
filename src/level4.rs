@@ -1,16 +1,14 @@
 use core::panic;
 use std::fmt::Debug;
 
-use petgraph::data::Build;
-use petgraph::visit::GraphProp;
 use petgraph::algo;
 use petgraph::graph::NodeIndex;
-use petgraph::{prelude::UnGraph, graph};
+use petgraph::{graph, prelude::UnGraph};
 
 const LEVEL: &str = "level4";
 
 #[derive(Debug, Clone)]
-struct Coord(usize, usize);
+struct Coord(isize, isize);
 
 impl std::ops::Sub for Coord {
     type Output = Self;
@@ -73,7 +71,7 @@ impl Game {
                 for (j, c) in line.chars().enumerate() {
                     let kind = match c {
                         'P' => {
-                            pac_pos = Coord(i, j);
+                            pac_pos = Coord(i as isize, j as isize);
                             Kind::Pacman
                         }
                         'C' => Kind::Coin,
@@ -82,7 +80,7 @@ impl Game {
                         _ => panic!("Why cruel world"),
                     };
 
-                    graph.add_node(Entity::new(kind, Coord(i, j)));
+                    graph.add_node(Entity::new(kind, Coord(i as isize, j as isize)));
                 }
             }
 
@@ -93,7 +91,7 @@ impl Game {
 
         // adding edges
         for i in 0..size {
-            for j in 0.. size {
+            for j in 0..size {
                 if i != size - 1 {
                     if i + 1 != j {
                         if graph[NodeIndex::new(i + 1 + j * size)].kind != Kind::Wall
@@ -144,14 +142,14 @@ impl Game {
 
     pub fn calculate(&self) {
         let mut graph = self.graph.clone();
-        
-        let start = graph[NodeIndex::new(self.pac_pos.0 + self.pac_pos.1*self.size)];
 
-        let path_to_all = algo::all_simple_paths::<Vec<_>, _>(&graph, start, start, 0, None)
-        .collect::<Vec<_>>();
+        let start =
+            graph[NodeIndex::new((self.pac_pos.0 + self.pac_pos.1 * self.size as isize) as usize)];
+
+        let path_to_all =
+            algo::all_simple_paths::<Vec<_>, _>(&graph, start, start, 0, None).collect::<Vec<_>>();
 
         let mut final_path = *path_to_all.get(0).unwrap();
-
 
         for path in path_to_all {
             if path.len() > final_path.len() {
@@ -167,24 +165,22 @@ impl Game {
 
         let out_string = String::new();
 
-        for index in 0..coords.len()-1 {
+        for index in 0..coords.len() - 1 {
             let diff = coords[index] - coords[index + 1];
 
             match diff {
-                (-1, 0) => out_string.push('R'),
-                (1, 0) => out_string.push('L'),
-                (0, -1) => out_string.push('D'),
-                (0, 1) => out_string.push('U'),
-                _ => ()
+                Coord(-1, 0) => out_string.push('R'),
+                Coord(1, 0) => out_string.push('L'),
+                Coord(0, -1) => out_string.push('D'),
+                Coord(0, 1) => out_string.push('U'),
+                _ => (),
             }
         }
 
         std::fs::write(format!("./{}/{}.out", LEVEL, self.file), out_string).unwrap();
-        
 
         println!("end");
 
         println!("{:?}", self.graph);
-        
     }
 }
