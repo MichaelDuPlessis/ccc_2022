@@ -30,6 +30,7 @@ pub struct Game {
     board: Vec<Vec<char>>,
     movements: String,
     pacman: Coords,
+    ghosts: Vec<Ghost>,
 }
 
 impl Game {
