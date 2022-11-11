@@ -1,19 +1,17 @@
-<<<<<<< HEAD
 use core::panic;
 use std::fmt::Debug;
 
+use petgraph::visit::GraphProp;
 use petgraph::{prelude::UnGraph, graph};
 
 const LEVEL: &str = "level4";
 
 use petgraph::{algo, prelude::*};
 
-=======
 use petgraph::{prelude::UnGraph, graph::NodeIndex};
 
 const LEVEL: &str = "level4";
 
->>>>>>> 208f4b846bd8a57b08c3e7002146c86ab0a239bc
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Entity {
     Coin,
@@ -23,12 +21,7 @@ pub enum Entity {
     Space,
 }
 
-<<<<<<< HEAD
-
-
-=======
 #[derive(Debug)]
->>>>>>> 208f4b846bd8a57b08c3e7002146c86ab0a239bc
 pub struct Game {
     graph: UnGraph<Entity, ()>,
     max_moves: usize,
@@ -104,11 +97,14 @@ impl Game {
         for way in &ways {
             println!("{:?}", way.clone());
         }  
+        
 
         let nodes = graph.node_weights();
 
+     
+
         for weight in nodes {
-            
+
         }
 
         println!("end");
