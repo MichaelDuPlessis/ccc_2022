@@ -19,6 +19,8 @@ impl std::ops::Add for Coords {
     }
 }
 
+#[derive(Debug)]
+
 pub struct Ghost {
     pos: Coords,
     movements: String,
@@ -139,7 +141,7 @@ impl Game {
                         2 => ghost_movements = line.trim().to_string(),
                         _ => {}
                     }
-                    
+
                     let ghost = Ghost {
                         pos: g_coords,
                         movements: ghost_movements.clone(),
@@ -150,7 +152,9 @@ impl Game {
                     count += 1;
                 } 
             }
-        } 
+        }
+
+        println!("{:?}", ghosts);
 
         Self {
             size: num,
