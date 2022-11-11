@@ -2,7 +2,7 @@ use petgraph::{prelude::UnGraph, graph::NodeIndex};
 
 const LEVEL: &str = "level4";
 
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Entity {
     Coin,
     Ghost,
@@ -11,39 +11,46 @@ pub enum Entity {
     Space,
 }
 
+#[derive(Debug)]
 pub struct Game {
-    graph: UnGraph<Entity, ()>
+    graph: UnGraph<Entity, ()>,
+    max_moves: usize,
+    size: usize,
 }
 
 impl Game {
     pub fn new(file: &str) -> Self {
         let mut graph = UnGraph::new_undirected();
 
-        let mut input = std::fs::read_to_string(format!("./{}/{}.in", LEVEL, file)).unwrap();
+        let input = std::fs::read_to_string(format!("./{}/{}.in", LEVEL, file)).unwrap();
         let mut lines = input.lines();
         let size = lines.next().unwrap().parse::<usize>().unwrap();
 
+        let mut max_moves= 0;
+
         for (i, line) in lines.enumerate() {
-            for (j, c) in line.chars().enumerate() {
-                 match c {
-                    'P' => {
-                        graph.add_node(Entity::Pacman);
-                    },
-                    'C' => {
-                        graph.add_node(Entity::Coin);
-                    },
-                    'G' => {
-                        graph.add_node(Entity::Ghost);
-                    },
-                    'W' => {
-                        graph.add_node(Entity::Wall);
-                    },
-                    _ => panic!("Why cruel world"),
-                };
+            if i < size {
+                for (j, c) in line.chars().enumerate() {
+                     match c {
+                        'P' => {
+                            graph.add_node(Entity::Pacman);
+                        },
+                        'C' => {
+                            graph.add_node(Entity::Coin);
+                        },
+                        'G' => {
+                            graph.add_node(Entity::Ghost);
+                        },
+                        'W' => {
+                            graph.add_node(Entity::Wall);
+                        },
+                        _ => panic!("Why cruel world"),
+                    };
+                }
             }
 
-            if i == size - 1 {
-                break;
+            if i == size + 1 {
+                max_moves = line.parse::<usize>().unwrap();
             }
         }
 
@@ -66,7 +73,9 @@ impl Game {
         }
 
         Self {
-            graph
+            graph,
+            size,
+            max_moves,
         }
     }
 }
