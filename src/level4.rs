@@ -3,18 +3,32 @@ use std::fmt::Debug;
 
 use petgraph::data::Build;
 use petgraph::visit::GraphProp;
+use petgraph::algo;
+use petgraph::graph::NodeIndex;
 use petgraph::{prelude::UnGraph, graph};
 
 const LEVEL: &str = "level4";
 
-use petgraph::{algo, prelude::*};
+#[derive(Debug, Clone)]
+struct Coord(usize, usize);
 
-use petgraph::{prelude::UnGraph, graph::NodeIndex};
+impl std::ops::Sub for Coord {
+    type Output = Self;
 
-const LEVEL: &str = "level4";
+    fn sub(self, other: Self) -> Self::Output {
+        Self(self.0 - other.0, self.1 - other.1)
+    }
+}
 
+impl std::ops::Add for Coord {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        Self(self.0 + other.0, self.1 + other.1)
+    }
+}
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
-pub enum Entity {
+pub enum Kind {
     Coin,
     Ghost,
     Wall,
@@ -22,11 +36,24 @@ pub enum Entity {
     Space,
 }
 
+#[derive(Debug, Clone)]
+pub struct Entity {
+    kind: Kind,
+    pos: Coord,
+}
+
+impl Entity {
+    fn new(kind: Kind, pos: Coord) -> Self {
+        Self { kind, pos }
+    }
+}
+
 #[derive(Debug)]
 pub struct Game {
     graph: UnGraph<Entity, ()>,
     max_moves: usize,
     size: usize,
+    pac_pos: Coord,
 }
 
 impl Game {
@@ -37,26 +64,24 @@ impl Game {
         let mut lines = input.lines();
         let size = lines.next().unwrap().parse::<usize>().unwrap();
 
-        let mut max_moves= 0;
+        let mut max_moves = 0;
+        let mut pac_pos = Coord(0, 0);
 
         for (i, line) in lines.enumerate() {
             if i < size {
                 for (j, c) in line.chars().enumerate() {
-                     match c {
+                    let kind = match c {
                         'P' => {
-                            graph.add_node(Entity::Pacman);
-                        },
-                        'C' => {
-                            graph.add_node(Entity::Coin);
-                        },
-                        'G' => {
-                            graph.add_node(Entity::Ghost);
-                        },
-                        'W' => {
-                            graph.add_node(Entity::Wall);
-                        },
+                            pac_pos = Coord(i, j);
+                            Kind::Pacman
+                        }
+                        'C' => Kind::Coin,
+                        'G' => Kind::Ghost,
+                        'W' => Kind::Wall,
                         _ => panic!("Why cruel world"),
                     };
+
+                    graph.add_node(Entity::new(kind, Coord(i, j)));
                 }
             }
 
@@ -69,16 +94,40 @@ impl Game {
         for i in 0..size {
             for j in 0.. size {
                 if i != size - 1 {
-                    graph.update_edge(NodeIndex::new(i + 1), NodeIndex::new(j), ());
+                    if i + 1 != j {
+                        if graph[NodeIndex::new(i + 1 + j * size)].kind != Kind::Wall
+                            && graph[NodeIndex::new(i + 1 + j * size)].kind != Kind::Ghost
+                        {
+                            graph.update_edge(NodeIndex::new(i + 1), NodeIndex::new(j), ());
+                        }
+                    }
                 }
                 if i != 0 {
-                    graph.update_edge(NodeIndex::new(i - 1), NodeIndex::new(j), ());
+                    if i - 1 != j {
+                        if graph[NodeIndex::new(i - 1 + j * size)].kind != Kind::Wall
+                            && graph[NodeIndex::new(i - 1 + j * size)].kind != Kind::Ghost
+                        {
+                            graph.update_edge(NodeIndex::new(i - 1), NodeIndex::new(j), ());
+                        }
+                    }
                 }
                 if j != size - 1 {
-                    graph.update_edge(NodeIndex::new(i), NodeIndex::new(j + 1), ());
+                    if i != j + 1 {
+                        if graph[NodeIndex::new(i + (j + 1) * size)].kind != Kind::Wall
+                            && graph[NodeIndex::new(i + (j + 1) * size)].kind != Kind::Ghost
+                        {
+                            graph.update_edge(NodeIndex::new(i), NodeIndex::new(j + 1), ());
+                        }
+                    }
                 }
                 if j != 0 {
-                    graph.update_edge(NodeIndex::new(i), NodeIndex::new(j - 1), ());
+                    if i != j - 1 {
+                        if graph[NodeIndex::new(i + (j - 1) * size)].kind != Kind::Wall
+                            && graph[NodeIndex::new(i + (j - 1) * size)].kind != Kind::Ghost
+                        {
+                            graph.update_edge(NodeIndex::new(i), NodeIndex::new(j - 1), ());
+                        }
+                    }
                 }
             }
         }
@@ -87,6 +136,7 @@ impl Game {
             graph,
             size,
             max_moves,
+            pac_pos,
         }
     }
 
@@ -119,7 +169,6 @@ impl Game {
 
         let mut coins_left = 0;
 
-        while 
         for (index, node) in working_nodes.enumerate() {
             coins_left = 0;
             if *node == Entity::Coin {
